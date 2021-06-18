@@ -19,18 +19,46 @@ namespace BelezaNaWeb.API.Controllers
             return Ok(new { working = "ok" });
         }
 
+        [HttpGet("{sku}")]
+        public ActionResult Get(int sku, [FromServices] IProdutcsServices service)
+        {
+            return Ok(service.GetProductBySku(sku));
+        }
 
         [HttpPost]
         public ActionResult Create([FromServices] IProdutcsServices service, [FromBody] Products products)
         {
             if (ModelState.IsValid)
             {                 
-                return Ok(service.CreateProduct(products));
+                return Created("",service.CreateProduct(products));
             }
             else
             {
                 return BadRequest(ModelState);
             }
         }
+
+
+        [HttpPut("{sku}")]
+        public ActionResult Update(int sku,[FromServices] IProdutcsServices service, [FromBody] Products products)
+        {
+            if (ModelState.IsValid)
+            {
+                return Ok(service.EditProduct(sku,products));
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+
+        [HttpDelete("{sku}")]
+        public ActionResult Delete(int sku, [FromServices] IProdutcsServices service)
+        {
+            return Ok(service.DeleteProductBySku(sku));
+        }
+
+
     }
 }

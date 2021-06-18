@@ -24,7 +24,7 @@ namespace BelezaNaWeb.Services
         {
             try
             {
-                if (GetProductBySku(product.sku) != null)
+                if (GetProductBySku(product.sku) == null)
                 {
                     products.Add(product);
                     messageView.SetMessage(true, "Success");
@@ -59,10 +59,10 @@ namespace BelezaNaWeb.Services
             return messageView;
         }
 
-        public IMessageViewModel EditProduct(IProductViewModel product)
+        public IMessageViewModel EditProduct(int sku,IProductViewModel product)
         {
 
-            int index = products.FindIndex(s => s.sku.Equals(product.sku));
+            int index = products.FindIndex(s => s.sku.Equals(sku));
             if (index != -1)
             {
                 products[index] = product;
@@ -81,7 +81,18 @@ namespace BelezaNaWeb.Services
 
         public IProductViewModel GetProductBySku(int sku)
         {
-            return products.Where(x => x.sku.Equals(sku)).FirstOrDefault();
+            //Recuperando o Produto
+            IProductViewModel product = products.Where(x => x.sku.Equals(sku)).FirstOrDefault();
+
+            if(product != null)
+            {
+                //Somando Quantity
+                product.inventory.quantity = product.inventory.warehouses.Sum(s => s.quantity);
+                //Definindo Marketable                
+                product.isMarketable = (product.inventory.quantity > 0 ? true : false);
+            }            
+
+            return product;
 
         }
     }

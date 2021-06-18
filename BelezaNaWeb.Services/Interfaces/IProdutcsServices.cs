@@ -11,7 +11,7 @@ namespace BelezaNaWeb.Services.Interfaces
 
         IMessageViewModel CreateProduct(IProductViewModel product);
 
-        IMessageViewModel EditProduct(IProductViewModel product);
+        IMessageViewModel EditProduct(int sku, IProductViewModel product);
 
         IProductViewModel GetProductBySku(int sku);
 
